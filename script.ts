@@ -94,6 +94,8 @@ class Colorizer{
 
 class Fractalizer {
 
+    convol:Array<number> = [1,2,1, 2,4,2, 1,2,1];
+
     render(ctx, screenWidth, screenHeight) {
       var factor : number = 3 ;
       var factor2 : number = factor*factor;
@@ -101,12 +103,13 @@ class Fractalizer {
       var stepx:number = 3.0/(screenWidth*factor) ;
       var stepy:number = -2.0/(screenHeight*factor) ;
 
-      var cx:number = -2.5;
+      var rx:number = -2.25;
+      var cx:number = rx;
       var cy:number = 1.0;
 
       var colorR:Colorizer = new Colorizer(200,1) ;
       var colorG:Colorizer = new Colorizer(200,1) ;
-      var colorB:Colorizer = new Colorizer(200,4) ;
+      var colorB:Colorizer = new Colorizer(200,2) ;
 
 
 
@@ -120,7 +123,7 @@ class Fractalizer {
                 cx += stepx;
             }
             cy += stepy;
-            cx = -2.5;
+            cx = rx;
         }
 
         for (var y = 0; y < screenHeight; y++) {
@@ -138,10 +141,10 @@ class Fractalizer {
               }
 
                 for (var s=0 ; s < mat.length ; s++){
-                  result += layout[mat[s]] ;
+                  result += layout[mat[s]]*this.convol[s] ;
                 }
 
-                result /= mat.length ;
+                result /= 16.0 ;
 
                   var color = new Color(
                     colorR.getColor(result),
@@ -165,6 +168,12 @@ function exec() {4
     var canv = document.createElement("canvas");
     canv.width = 800;
     canv.height = canv.width*2/3 ;
+    canv.style.position = "absolute";
+    canv.style.margin = "auto";
+    canv.style.top = "0";
+    canv.style.left = "0";
+    canv.style.right = "0";
+    canv.style.bottom = "0";
     document.body.appendChild(canv);
     var ctx = canv.getContext("2d");
     var rayTracer = new Fractalizer();
